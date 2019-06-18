@@ -75,7 +75,11 @@ int main(void) {
         }
 
         usbd_device* usbd_dev = usb_setup();
-        dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
+ #ifdef DEVELOP
+         dfu_setup(usbd_dev, &jump_to_application, NULL, NULL);
+ #else
+         dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
+ #endif
         webusb_setup(usbd_dev);
         winusb_setup(usbd_dev);
         
