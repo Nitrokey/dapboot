@@ -80,7 +80,7 @@ int main(void) {
  #else
          dfu_setup(usbd_dev, &target_manifest_app, NULL, NULL);
  #endif
-        webusb_setup(usbd_dev);
+        /* webusb_setup(usbd_dev);*/
         winusb_setup(usbd_dev);
         
         while (1) {
