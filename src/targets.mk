@@ -39,6 +39,19 @@ ifeq ($(TARGET),STLINK)
 	LDSCRIPT			:= ./stm32f103/stm32f103x8.ld
 	ARCH				= STM32F1
 endif
+ifeq ($(TARGET),NKPRO)
+	TARGET_COMMON_DIR	:= ./stm32f103
+	TARGET_SPEC_DIR		:= ./stm32f103/nkpro
+	LDSCRIPT			:= ./stm32f103/stm32f103x8.ld
+	ARCH				= STM32F1
+endif
+ifeq ($(TARGET),NKPRODEVELOP)
+	TARGET_COMMON_DIR	:= ./stm32f103
+	TARGET_SPEC_DIR		:= ./stm32f103/nkpro
+	LDSCRIPT			:= ./stm32f103/stm32f103x8.ld
+	ARCH				= STM32F1
+	DEFS				+= -DDEVELOP
+endif
 
 ifndef ARCH
 $(error Unknown target $(TARGET))

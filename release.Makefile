@@ -29,33 +29,29 @@ export V
 
 BUILD_DIR      ?= ./build
 
-all: dapboot-bluepill.bin \
-     dapboot-maplemini.bin \
-     dapboot-stlink.bin
+all: dapboot-nkpro.bin \
+	 dapboot-nkpro-develop.bin
 
 clean:
 	$(Q)$(RM) $(BUILD_DIR)/*.bin
 	$(Q)$(MAKE) -C src/ clean
 
-.PHONY = all clean
+flash: dapboot-nkpro.bin
+	$(Q)st-flash write $(BUILD_DIR)/$< 0x8000000 
+
+.PHONY = all clean flash
 
 $(BUILD_DIR):
 	$(Q)mkdir -p $(BUILD_DIR)
 
-dapboot-bluepill.bin: | $(BUILD_DIR)
+dapboot-nkpro.bin: | $(BUILD_DIR)
 	@printf "  BUILD $(@)\n"
-	$(Q)$(MAKE) TARGET=BLUEPILL -C src/ clean
-	$(Q)$(MAKE) TARGET=BLUEPILL -C src/
+	$(Q)$(MAKE) TARGET=NKPRO -C src/ clean
+	$(Q)$(MAKE) TARGET=NKPRO -C src/
 	$(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
 
-dapboot-stlink.bin: | $(BUILD_DIR)
+dapboot-nkpro-develop.bin: | $(BUILD_DIR)
 	@printf "  BUILD $(@)\n"
-	$(Q)$(MAKE) TARGET=STLINK -C src/ clean
-	$(Q)$(MAKE) TARGET=STLINK -C src/
-	$(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
-
-dapboot-maplemini.bin: | $(BUILD_DIR)
-	@printf "  BUILD $(@)\n"
-	$(Q)$(MAKE) TARGET=MAPLEMINI -C src/ clean
-	$(Q)$(MAKE) TARGET=MAPLEMINI -C src/
+	$(Q)$(MAKE) TARGET=NKPRODEVELOP -C src/ clean
+	$(Q)$(MAKE) TARGET=NKPRODEVELOP -C src/
 	$(Q)cp src/dapboot.bin $(BUILD_DIR)/$(@)
