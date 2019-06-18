@@ -50,7 +50,9 @@ _Static_assert((FLASH_BASE + FLASH_SIZE_OVERRIDE >= APP_BASE_ADDRESS),
                "Incompatible flash size");
 #endif
 
+#ifndef DEVELOP
 static const uint32_t CMD_BOOT = 0x544F4F42UL;
+#endif
 
 void target_clock_setup(void) {
 #ifdef USE_HSI
@@ -60,7 +62,7 @@ void target_clock_setup(void) {
     rcc_clock_setup_in_hsi_out_48mhz();
 #else
     /* Set system clock to 72 MHz from an external crystal */
-    rcc_clock_setup_in_hse_8mhz_out_72mhz();
+    rcc_clock_setup_in_hse_12mhz_out_72mhz();
 #endif
 }
 
@@ -106,6 +108,13 @@ void target_gpio_setup(void) {
 #endif
 
 #if HAVE_USB_PULLUP_CONTROL
+
+#if USE_PA15
+        /* Enable PA15 remapping for NK Pro*/
+        rcc_periph_clock_enable(RCC_AFIO);
+        AFIO_MAPR |= AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON;
+#endif
+
     {
         const uint8_t mode = GPIO_MODE_OUTPUT_10_MHZ;
         const uint8_t conf = (USB_PULLUP_OPEN_DRAIN ? GPIO_CNF_OUTPUT_OPENDRAIN
@@ -150,6 +159,9 @@ const usbd_driver* target_usb_init(void) {
 }
 
 bool target_get_force_bootloader(void) {
+#ifdef DEVELOP
+    return true;
+#else
     bool force = false;
     /* Check the RTC backup register */
     uint32_t cmd = backup_read(BKP0);
@@ -171,9 +183,10 @@ bool target_get_force_bootloader(void) {
             force = true;
         }
     }
-#endif
+#endif // HAVE_BUTTON
 
     return force;
+#endif // DEVELOP
 }
 
 void target_get_serial_number(char* dest, size_t max_chars) {
