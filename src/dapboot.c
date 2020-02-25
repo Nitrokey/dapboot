@@ -66,6 +66,7 @@ int main(void) {
     target_gpio_setup();
 
     if (target_get_force_bootloader() || !validate_application()) {
+        target_set_force_bootloader(true);
         /* Setup USB */
         {
             char serial[USB_SERIAL_NUM_LENGTH+1];

@@ -152,6 +152,7 @@ static int dfu_control_class_request(usbd_device *usbd_dev,
                 }
                 case STATE_DFU_MANIFEST_SYNC: {
                     if (validate_application()) {
+                        target_set_force_bootloader(false);
                         dfu_set_state(STATE_DFU_MANIFEST);
                         *complete = &dfu_on_manifest_request;
                     } else {

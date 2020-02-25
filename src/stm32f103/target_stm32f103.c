@@ -158,6 +158,16 @@ const usbd_driver* target_usb_init(void) {
     return &st_usbfs_v1_usb_driver;
 }
 
+extern void target_set_force_bootloader(bool activated){
+  if (activated) {
+#ifndef DEVELOP
+    backup_write(BKP0, CMD_BOOT);
+#endif
+  } else {
+    backup_write(BKP0, 0);
+  }
+}
+
 bool target_get_force_bootloader(void) {
 #ifdef DEVELOP
     return true;
@@ -170,7 +180,7 @@ bool target_get_force_bootloader(void) {
     }
 
     /* Clear the RTC backup register */
-    backup_write(BKP0, 0);
+//    backup_write(BKP0, 0);
 
 #if HAVE_BUTTON
     /* Check if the user button is held down */
