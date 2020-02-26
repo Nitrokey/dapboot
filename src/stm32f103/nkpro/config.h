@@ -24,7 +24,10 @@
 #define DFU_UPLOAD_AVAILABLE 0
 #define DFU_DOWNLOAD_AVAILABLE 1
 
-#define FLASH_SIZE_OVERRIDE 0x20000
+//#define FLASH_SIZE_OVERRIDE 0x20000
+// Make all everything over 110th kB user data, unreachable by the bootloader
+#define MAXIMUM_FIRMWARE_REACH_KB   (110)
+#define FLASH_SIZE_OVERRIDE (1024*(MAXIMUM_FIRMWARE_REACH_KB))
 
 #define HAVE_LED 1
 #define LED_GPIO_PORT GPIOB

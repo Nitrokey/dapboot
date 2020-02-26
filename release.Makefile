@@ -29,7 +29,7 @@ export V
 
 BUILD_DIR      ?= ./build
 
-all: dapboot-nkpro.bin \
+all: | dapboot-nkpro.bin \
 	 dapboot-nkpro-develop.bin
 
 clean:
